@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicMatch.API", "MusicMatch.API\MusicMatch.API.csproj", "{0D579E95-68A4-4D06-98D4-78380846DEBE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicMatch.Application", "MusicMatch.Application\MusicMatch.Application.csproj", "{32D76000-A633-4032-92B0-F873B0F73F4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicMatch.Domain", "MusicMatch.Domain\MusicMatch.Domain.csproj", "{1448B8CF-DD42-4F5C-9F5C-EAFEC87B66A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicMatch.Infrastructure", "MusicMatch.Infrastructure\MusicMatch.Infrastructure.csproj", "{49516FA2-2B29-4A21-BEB8-EA443B381BB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicMatch.Authentication", "MusicMatch.Authentication\MusicMatch.Authentication.csproj", "{35B73F2E-4749-4FB6-92A1-B1578BF33449}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicMatch.Tests", "MusicMatch.Tests\MusicMatch.Tests.csproj", "{00146CDA-EA83-4B66-8D23-E817954BFC41}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0D579E95-68A4-4D06-98D4-78380846DEBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D579E95-68A4-4D06-98D4-78380846DEBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D579E95-68A4-4D06-98D4-78380846DEBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D579E95-68A4-4D06-98D4-78380846DEBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32D76000-A633-4032-92B0-F873B0F73F4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32D76000-A633-4032-92B0-F873B0F73F4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32D76000-A633-4032-92B0-F873B0F73F4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32D76000-A633-4032-92B0-F873B0F73F4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1448B8CF-DD42-4F5C-9F5C-EAFEC87B66A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1448B8CF-DD42-4F5C-9F5C-EAFEC87B66A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1448B8CF-DD42-4F5C-9F5C-EAFEC87B66A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1448B8CF-DD42-4F5C-9F5C-EAFEC87B66A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49516FA2-2B29-4A21-BEB8-EA443B381BB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49516FA2-2B29-4A21-BEB8-EA443B381BB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49516FA2-2B29-4A21-BEB8-EA443B381BB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49516FA2-2B29-4A21-BEB8-EA443B381BB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35B73F2E-4749-4FB6-92A1-B1578BF33449}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35B73F2E-4749-4FB6-92A1-B1578BF33449}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35B73F2E-4749-4FB6-92A1-B1578BF33449}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35B73F2E-4749-4FB6-92A1-B1578BF33449}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00146CDA-EA83-4B66-8D23-E817954BFC41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00146CDA-EA83-4B66-8D23-E817954BFC41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00146CDA-EA83-4B66-8D23-E817954BFC41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00146CDA-EA83-4B66-8D23-E817954BFC41}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

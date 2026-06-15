@@ -1,0 +1,24 @@
+# .NET
+bin/
+obj/
+*.user
+
+# Node
+node_modules/
+dist/
+musicmatch-frontend/dist/
+
+# Logs
+*.log
+
+# Zone identifiers (Windows downloads)
+*Zone.Identifier
+
+# Configurações sensíveis
+appsettings.Development.json
+**/appsettings.Development.json
+
+# IDE
+.vs/
+.vscode/
+*.swp
