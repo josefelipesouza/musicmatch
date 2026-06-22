@@ -13,7 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicMatch.Infrastructure",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicMatch.Authentication", "MusicMatch.Authentication\MusicMatch.Authentication.csproj", "{35B73F2E-4749-4FB6-92A1-B1578BF33449}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicMatch.Tests", "MusicMatch.Tests\MusicMatch.Tests.csproj", "{00146CDA-EA83-4B66-8D23-E817954BFC41}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{1D71D748-9FD2-4AB1-A5E0-B63BD70543FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicMatch.Tests.Unit", "tests\MusicMatch.Tests.Unit\MusicMatch.Tests.Unit.csproj", "{BB22CFF9-68E5-46A0-9857-8B6C86F067C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicMatch.Tests.Integration", "tests\MusicMatch.Tests.Integration\MusicMatch.Tests.Integration.csproj", "{7A4304E4-7BC7-4850-A191-890E9E63878B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,9 +48,17 @@ Global
 		{35B73F2E-4749-4FB6-92A1-B1578BF33449}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35B73F2E-4749-4FB6-92A1-B1578BF33449}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35B73F2E-4749-4FB6-92A1-B1578BF33449}.Release|Any CPU.Build.0 = Release|Any CPU
-		{00146CDA-EA83-4B66-8D23-E817954BFC41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{00146CDA-EA83-4B66-8D23-E817954BFC41}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{00146CDA-EA83-4B66-8D23-E817954BFC41}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{00146CDA-EA83-4B66-8D23-E817954BFC41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB22CFF9-68E5-46A0-9857-8B6C86F067C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB22CFF9-68E5-46A0-9857-8B6C86F067C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB22CFF9-68E5-46A0-9857-8B6C86F067C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB22CFF9-68E5-46A0-9857-8B6C86F067C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A4304E4-7BC7-4850-A191-890E9E63878B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A4304E4-7BC7-4850-A191-890E9E63878B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A4304E4-7BC7-4850-A191-890E9E63878B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A4304E4-7BC7-4850-A191-890E9E63878B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BB22CFF9-68E5-46A0-9857-8B6C86F067C3} = {1D71D748-9FD2-4AB1-A5E0-B63BD70543FE}
+		{7A4304E4-7BC7-4850-A191-890E9E63878B} = {1D71D748-9FD2-4AB1-A5E0-B63BD70543FE}
 	EndGlobalSection
 EndGlobal

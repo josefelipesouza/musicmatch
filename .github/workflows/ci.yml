@@ -1,0 +1,197 @@
+name: CI — Testes Unitários e de Integração
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  # ─── Testes Unitários (sem dependências externas) ─────────────────────────
+  unit-tests:
+    name: Testes Unitários
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restaurar dependências
+        run: dotnet restore MusicMatch.sln
+
+      - name: Build
+        run: dotnet build MusicMatch.sln --no-restore --configuration Release
+
+      - name: Executar testes unitários
+        run: |
+          dotnet test tests/MusicMatch.Tests.Unit/MusicMatch.Tests.Unit.csproj \
+            --no-build \
+            --configuration Release \
+            --logger "trx;LogFileName=unit-results.trx" \
+            --collect:"XPlat Code Coverage" \
+            --results-directory ./TestResults/Unit
+
+      - name: Publicar resultados (unitários)
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Resultados — Unitários
+          path: TestResults/Unit/*.trx
+          reporter: dotnet-trx
+
+      - name: Upload cobertura
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-unit
+          path: TestResults/Unit/**/coverage.cobertura.xml
+
+  # ─── Testes de Integração (PostgreSQL + RabbitMQ via services) ────────────
+  integration-tests:
+    name: Testes de Integração
+    runs-on: ubuntu-latest
+    needs: unit-tests  # só roda se os unitários passarem
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres123
+          POSTGRES_DB: musicmatch_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      rabbitmq:
+        image: rabbitmq:3-management-alpine
+        ports:
+          - 5672:5672
+          - 15672:15672
+        env:
+          RABBITMQ_DEFAULT_USER: guest
+          RABBITMQ_DEFAULT_PASS: guest
+        options: >-
+          --health-cmd "rabbitmq-diagnostics -q ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      # Banco de testes — lido pela MusicMatchWebFactory
+      TEST_DB_CONNECTION: "Host=localhost;Port=5432;Database=musicmatch_test;Username=postgres;Password=postgres123"
+      # Configurações mínimas para a Program.cs não quebrar no startup
+      ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=musicmatch_test;Username=postgres;Password=postgres123"
+      RabbitMQ__Host: localhost
+      Authentication__Jwt__Secret: "super-secret-key-for-ci-tests-only-32chars"
+      Authentication__Jwt__Issuer: "MusicMatchTest"
+      Authentication__Jwt__Audience: "MusicMatchTest"
+      Authentication__Google__ClientId: "fake-client-id"
+      Authentication__Google__ClientSecret: "fake-client-secret"
+      ASPNETCORE_ENVIRONMENT: Testing
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restaurar dependências
+        run: dotnet restore MusicMatch.sln
+
+      - name: Build
+        run: dotnet build MusicMatch.sln --no-restore --configuration Release
+
+      - name: Aguardar PostgreSQL
+        run: |
+          for i in {1..30}; do
+            pg_isready -h localhost -p 5432 -U postgres && break
+            echo "Aguardando PostgreSQL... ($i)"
+            sleep 2
+          done
+
+      - name: Executar testes de integração
+        run: |
+          dotnet test tests/MusicMatch.Tests.Integration/MusicMatch.Tests.Integration.csproj \
+            --no-build \
+            --configuration Release \
+            --logger "trx;LogFileName=integration-results.trx" \
+            --collect:"XPlat Code Coverage" \
+            --results-directory ./TestResults/Integration
+
+      - name: Publicar resultados (integração)
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Resultados — Integração
+          path: TestResults/Integration/*.trx
+          reporter: dotnet-trx
+
+      - name: Upload cobertura
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-integration
+          path: TestResults/Integration/**/coverage.cobertura.xml
+
+  # ─── Sumário de cobertura ─────────────────────────────────────────────────
+  coverage-report:
+    name: Relatório de Cobertura
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests]
+    if: always()
+
+    steps:
+      - name: Download cobertura unitária
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-unit
+          path: coverage/unit
+
+      - name: Download cobertura de integração
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-integration
+          path: coverage/integration
+
+      - name: Instalar ReportGenerator
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+      - name: Gerar relatório HTML
+        run: |
+          reportgenerator \
+            -reports:"coverage/**/*.xml" \
+            -targetdir:"coverage/report" \
+            -reporttypes:"Html;Cobertura;MarkdownSummaryGithub"
+
+      - name: Publicar sumário no PR
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('coverage/report/SummaryGithub.md', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: summary
+            });
+
+      - name: Upload relatório HTML
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-html
+          path: coverage/report/

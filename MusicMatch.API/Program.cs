@@ -11,49 +11,37 @@ using MusicMatch.Infrastructure.Messaging;
 //using MusicMatch.Infrastructure.Geolocation;
 using MusicMatch.Infrastructure.Persistence;
 using MusicMatch.Infrastructure.Repositories;
-
 var builder = WebApplication.CreateBuilder(args);
-
 // Controllers
 builder.Services.AddControllers();
-
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
     {
         options.SuppressModelStateInvalidFilter = true;
     });
-
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 // MediatR
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(
         typeof(CadastrarArtistaCommand).Assembly));
-
 // FluentValidation
 builder.Services.AddValidatorsFromAssemblyContaining<CadastrarArtistaValidator>();
-
 // Entity Framework + PostgreSQL
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 // Repositórios
 builder.Services.AddScoped<IArtistaRepository, ArtistaRepository>();
 builder.Services.AddScoped<IContratanteRepository, ContratanteRepository>();
 builder.Services.AddScoped<IEventoRepository, EventoRepository>();
 builder.Services.AddScoped<IMensagemRepository, MensagemRepository>();
 builder.Services.AddScoped<IAgendaRepository, AgendaRepository>();
-
-
 //builder.Services.AddHttpClient<IGeocodingService, GoogleGeocodingService>();
-
 // RabbitMQ
 builder.Services.AddSingleton<IMessageService>(sp =>
     new RabbitMqService(builder.Configuration["RabbitMQ:Host"] ?? "localhost"));
 builder.Services.AddHostedService<RabbitMqConsumerService>();
-
 // CORS
 builder.Services.AddCors(options =>
 {
@@ -68,10 +56,8 @@ builder.Services.AddCors(options =>
         .AllowAnyMethod();
     });
 });
-
 // JWT Service
 builder.Services.AddSingleton<JwtService>();
-
 // Google Auth
 builder.Services.AddAuthentication(options =>
 {
@@ -84,7 +70,6 @@ builder.Services.AddAuthentication(options =>
     options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
 });
-
 // JWT Bearer
 builder.Services.AddAuthentication()
     .AddJwtBearer(options =>
@@ -101,24 +86,38 @@ builder.Services.AddAuthentication()
                 System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Authentication:Jwt:Secret"]!))
         };
     });
-
 var app = builder.Build();
-
 app.UseCors("AllowFrontend");
-
+// Tratamento global de exceções
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var exceptionFeature = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
+        if (exceptionFeature?.Error is ArgumentException argEx)
+        {
+            context.Response.StatusCode = 400;
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsJsonAsync(new { error = argEx.Message });
+        }
+        else
+        {
+            context.Response.StatusCode = 500;
+        }
+    });
+});
 // Aplicar migrations automaticamente
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
+    if (!app.Environment.IsEnvironment("Testing")) db.Database.Migrate();
 }
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+public partial class Program { }

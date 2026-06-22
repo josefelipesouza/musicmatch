@@ -22,3 +22,6 @@ appsettings.Development.json
 .vs/
 .vscode/
 *.swp
+appsettings.*.json
+appsettings.json
+MusicMatch.API/appsettings.json

@@ -54,7 +54,7 @@ public class AgendaRepository : IAgendaRepository
         decimal? baseCacheHoraAte)
     {
         var query = _context.Agendas
-            .Include(a => a.Artista)   // ← garante que Artista é carregado
+            .Include(a => a.Artista)
             .Where(a =>
                 a.Disponivel &&
                 a.FormatoShow == formatoShow &&
