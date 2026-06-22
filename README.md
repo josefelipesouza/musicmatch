@@ -1,269 +1,306 @@
-📋 MusicMatch
+# 🎵 MusicMatch
 
-Plataforma para conectar artistas e contratantes de eventos, desenvolvida em ASP.NET Core, utilizando Clean Architecture, MediatR, Entity Framework Core, RabbitMQ para mensageria, autenticação via Google OAuth + JWT e React + TypeScript + Tailwind CSS no frontend.
+> Plataforma que conecta **artistas** e **contratantes de eventos** com base em compatibilidade de agenda, estilo musical, localização e equipamento.
 
-🚀 Tecnologias Utilizadas
+---
 
-Backend
+## 🧱 Stack
 
-.NET 8 — Plataforma principal
-ASP.NET Core Web API — Camada HTTP
-Entity Framework Core 8 — ORM para persistência
-PostgreSQL — Banco de dados relacional
-MediatR — Implementação do padrão CQRS
-FluentValidation — Validação de dados de entrada
-RabbitMQ — Mensageria para eventos assíncronos
-Google OAuth + JWT — Autenticação e autorização
-Swagger (OpenAPI) — Documentação da API
+### Backend
+| Tecnologia | Função |
+|---|---|
+| .NET 8 + ASP.NET Core | Plataforma e camada HTTP |
+| Entity Framework Core 8 | ORM + Migrations |
+| PostgreSQL | Banco de dados relacional |
+| MediatR | CQRS (Commands e Queries) |
+| FluentValidation | Validação de entrada |
+| RabbitMQ + MailKit | Mensageria e notificações por e-mail |
+| Google OAuth + JWT | Autenticação e autorização |
+| Swagger (OpenAPI) | Documentação interativa da API |
 
-Frontend
+### Frontend
+| Tecnologia | Função |
+|---|---|
+| React 18 + TypeScript | Interface de usuário |
+| Tailwind CSS | Estilização utilitária |
+| Vite | Build e dev server |
+| Axios | Cliente HTTP |
 
-React 18 — Biblioteca de interface
-TypeScript — Tipagem estática
-Tailwind CSS — Estilização utilitária
-Vite — Ambiente de build
-Axios — Cliente HTTP
+### Infraestrutura
+| Tecnologia | Função |
+|---|---|
+| Docker + Docker Compose | PostgreSQL e RabbitMQ em container |
+| GitHub Actions | CI/CD automático a cada push |
 
-Infraestrutura
+---
 
-Docker — Containerização
-Docker Compose — Orquestração dos serviços (PostgreSQL e RabbitMQ)
+## 📂 Estrutura do Projeto
 
-📂 Estrutura do Projeto
-
+```
 musicmatch/
 │
-├── MusicMatch.API/                  # Camada de Apresentação (Injeção de Dependência e Endpoints)
-│   ├── Controllers/                 # Controllers da API
-│   │   ├── ArtistasController.cs
-│   │   ├── ContratantesController.cs
-│   │   └── EventosController.cs
-│   ├── Program.cs                   # Configuração de serviços e Middleware
-│   ├── appsettings.json             # Configurações de conexão e variáveis (não versionado com segredos reais)
-│   └── appsettings.Example.json     # Modelo de configuração
+├── MusicMatch.API/                  # Apresentação — Controllers, Program.cs, configurações
+├── MusicMatch.Application/          # Casos de uso — Commands, Queries, Handlers, Validators, DTOs
+├── MusicMatch.Domain/               # Núcleo — Entidades, Enums, Interfaces
+├── MusicMatch.Infrastructure/       # I/O — EF Core, Repositórios, RabbitMQ, Migrations
+├── MusicMatch.Authentication/       # JWT + Google OAuth
 │
-├── MusicMatch.Application/          # Regras de Negócio e Casos de Uso
-│   ├── Commands/                    # Comandos de escrita (CQRS)
-│   ├── Queries/                     # Comandos de leitura (CQRS)
-│   ├── Handlers/                    # Orquestração (MediatR)
-│   ├── Validators/                  # FluentValidation
-│   └── DTOs/                        # Objetos de transferência de dados
+├── tests/
+│   ├── MusicMatch.Tests.Unit/       # Testes unitários (xUnit + FluentAssertions)
+│   └── MusicMatch.Tests.Integration/# Testes de integração (WebApplicationFactory)
 │
-├── MusicMatch.Domain/                # Núcleo do Sistema (Enterprise Rules)
-│   ├── Entities/                    # Entidades (Artista, Contratante, Evento, Agenda, etc.)
-│   ├── Enums/                       # Tipos enumerados (FormatoShow, TipoEvento, etc.)
-│   └── Interfaces/                  # Contratos de Repositórios
-│
-├── MusicMatch.Infrastructure/        # Implementações de I/O e Ferramentas Externas
-│   ├── Persistence/                 # Entity Framework Core (AppDbContext)
-│   ├── Repositories/                # Implementações dos repositórios
-│   ├── Messaging/                   # RabbitMQ (produtor e consumidor)
-│   └── Migrations/                  # Histórico de banco de dados
-│
-├── MusicMatch.Authentication/        # JWT e integração com Google OAuth
-│
-├── MusicMatch.Tests/                 # Testes unitários
-│
-├── musicmatch-frontend/              # SPA em React (TypeScript)
-│
-└── docker-compose.yml                # Orquestração (PostgreSQL e RabbitMQ)
+├── musicmatch-frontend/             # SPA React + TypeScript + Tailwind
+├── docker-compose.yml               # PostgreSQL + RabbitMQ
+└── .github/workflows/ci.yml         # Pipeline CI
+```
 
-🔑 Responsabilidades das Camadas
+### Responsabilidades por camada
 
-Camada            | Responsabilidade
-------------------|------------------------------------------------------
-API               | Receber requisições HTTP e retornar respostas
-Application       | Orquestrar regras de negócio (CQRS com MediatR)
-Domain            | Entidades e regras de negócio puras
-Infrastructure    | Banco de dados, RabbitMQ, repositórios, geocoding
-Authentication    | JWT + Google OAuth
-Tests             | Testes unitários
+| Camada | Responsabilidade |
+|---|---|
+| API | Receber requisições HTTP, retornar respostas |
+| Application | Orquestrar regras de negócio via MediatR |
+| Domain | Entidades e regras de negócio puras |
+| Infrastructure | Banco de dados, RabbitMQ, repositórios |
+| Authentication | JWT + Google OAuth |
+| Tests | Unitários e integração |
 
-⚙️ Pré-requisitos
+---
 
-.NET SDK 8
-Node.js 18+
-Docker Desktop (com WSL2 integration, se estiver no Windows)
-Git
+## ⚙️ Pré-requisitos
 
-Verifique as instalações:
+- [.NET SDK 8](https://dotnet.microsoft.com/download)
+- [Node.js 18+](https://nodejs.org/)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (com WSL2 no Windows)
+- Git
 
+```bash
 dotnet --version   # 8.0.x
 node --version     # v18+ ou v20.x
 docker --version   # 20+
+```
 
-▶️ Como Rodar o Projeto
+---
 
-1️⃣ Clonar o repositório
+## ▶️ Como Rodar o Projeto
 
+### 1. Clonar o repositório
+
+```bash
 git clone https://github.com/josefelipesouza/musicmatch.git
 cd musicmatch
+```
 
-2️⃣ Configurar o appsettings.json
+---
 
-Copie o arquivo de exemplo e preencha com suas próprias credenciais:
+### 2. Configurar o `appsettings.json`
 
+Copie o arquivo de exemplo:
+
+```bash
 cp MusicMatch.API/appsettings.Example.json MusicMatch.API/appsettings.json
+```
 
-Edite MusicMatch.API/appsettings.json e informe:
+Edite `MusicMatch.API/appsettings.json` e preencha:
 
-- ConnectionStrings.DefaultConnection: usuário/senha do PostgreSQL
-- Smtp: credenciais de um e-mail para envio de notificações (recomendado: senha de app do Gmail)
-- Authentication.Google.ClientId e ClientSecret: credenciais OAuth criadas no Google Cloud Console
-- Authentication.Jwt.Secret: uma chave secreta longa e aleatória, usada para assinar os tokens JWT
+| Chave | Descrição |
+|---|---|
+| `ConnectionStrings.DefaultConnection` | String de conexão com o PostgreSQL |
+| `Authentication.Google.ClientId` | Client ID do Google Cloud Console |
+| `Authentication.Google.ClientSecret` | Client Secret do Google Cloud Console |
+| `Authentication.Jwt.Secret` | Chave secreta longa e aleatória para assinar tokens JWT |
+| `Smtp` | Credenciais de e-mail para envio de notificações |
 
-⚠️ Nunca commite o appsettings.json com credenciais reais. Ele está no .gitignore.
 
-3️⃣ Subir a infraestrutura (PostgreSQL e RabbitMQ)
+---
 
+### 3. Subir a infraestrutura (PostgreSQL + RabbitMQ)
+
+```bash
 docker-compose up -d
+```
 
-Serviço     | URL
-------------|---------------------------
-PostgreSQL  | localhost:5432
-RabbitMQ    | localhost:5672
-RabbitMQ UI | http://localhost:15672 (guest/guest)
+| Serviço | URL |
+|---|---|
+| PostgreSQL | `localhost:5432` |
+| RabbitMQ | `localhost:5672` |
+| RabbitMQ UI | [http://localhost:15672](http://localhost:15672) — `guest / guest` |
 
-4️⃣ Iniciar o Backend
+---
 
-Abra um terminal e execute:
+### 4. Iniciar o Backend
 
+```bash
 dotnet restore
 dotnet run --project MusicMatch.API
+```
 
-A API estará disponível em:
+| Recurso | URL |
+|---|---|
+| API | [http://localhost:5216](http://localhost:5216) |
+| Swagger | [http://localhost:5216/swagger](http://localhost:5216/swagger) |
 
-http://localhost:5216
+> As migrations do banco de dados são aplicadas automaticamente na inicialização.
 
-Swagger (documentação interativa):
+---
 
-http://localhost:5216/swagger
+### 5. Iniciar o Frontend
 
-As migrations do banco são aplicadas automaticamente na inicialização da API.
+Abra um **novo terminal**:
 
-5️⃣ Iniciar o Frontend
-
-Abra outro terminal e execute:
-
+```bash
 cd musicmatch-frontend
 npm install
 npm run dev
+```
 
-O frontend estará disponível em:
+| Recurso | URL |
+|---|---|
+| Frontend | [http://localhost:5173](http://localhost:5173) |
 
-http://localhost:5173
+---
 
-🔐 Autenticação
+## 🔐 Autenticação
 
-O login é feito exclusivamente via Google OAuth:
+O login é feito via **Google OAuth**:
 
-- GET /api/auth/google — inicia o fluxo de login com o Google
-- GET /api/auth/google/callback — callback do Google, gera o token JWT e redireciona para o frontend
+| Endpoint | Descrição |
+|---|---|
+| `GET /api/auth/google` | Inicia o fluxo OAuth com o Google |
+| `GET /api/auth/google/callback` | Callback do Google — gera o JWT e redireciona para o frontend |
 
-No primeiro acesso, o usuário é direcionado para a tela de cadastro (artista ou contratante) para completar seu perfil.
+No primeiro acesso, o usuário é direcionado para completar o cadastro como **artista** ou **contratante**.
 
-🗄️ Banco de Dados e Migrations
+---
 
-O projeto utiliza Entity Framework Core com PostgreSQL.
+## 🗄️ Banco de Dados e Migrations
 
-Criar uma nova migration
-
+```bash
+# Criar nova migration
 dotnet ef migrations add NomeDaMigration \
   --project MusicMatch.Infrastructure \
   --startup-project MusicMatch.API
 
-Aplicar migrations manualmente
-
+# Aplicar migrations manualmente
 dotnet ef database update \
   --project MusicMatch.Infrastructure \
   --startup-project MusicMatch.API
+```
 
-As migrations ficam em MusicMatch.Infrastructure/Migrations/
+Migrations ficam em `MusicMatch.Infrastructure/Migrations/`.
 
-📦 Principais Endpoints da API
+---
 
-Artistas
+## 📦 Principais Endpoints da API
 
-Método | Endpoint                        | Descrição
--------|----------------------------------|---------------------------------------------
-POST   | /api/artistas                    | Cadastrar artista
-GET    | /api/artistas/{id}               | Buscar artista por ID
-PUT    | /api/artistas/{id}               | Atualizar perfil do artista
-GET    | /api/artistas/buscar             | Buscar artistas compatíveis (match) com um evento
-POST   | /api/artistas/agenda             | Criar agenda de disponibilidade
-GET    | /api/artistas/{id}/agendas       | Listar agendas do artista
-DELETE | /api/artistas/agenda/{agendaId}  | Cancelar uma agenda
+### Artistas
 
-Contratantes
+| Método | Endpoint | Descrição |
+|---|---|---|
+| `POST` | `/api/artistas` | Cadastrar artista |
+| `GET` | `/api/artistas/{id}` | Buscar artista por ID |
+| `PUT` | `/api/artistas/{id}` | Atualizar perfil |
+| `GET` | `/api/artistas/buscar` | Match com evento (Haversine + filtros) |
+| `POST` | `/api/artistas/agenda` | Criar agenda de disponibilidade |
+| `GET` | `/api/artistas/{id}/agendas` | Listar agendas |
+| `DELETE` | `/api/artistas/agenda/{agendaId}` | Cancelar agenda |
 
-Método | Endpoint                                  | Descrição
--------|--------------------------------------------|---------------------------------------------
-POST   | /api/contratantes                          | Cadastrar contratante
-GET    | /api/contratantes/{id}                     | Buscar contratante por ID
-PUT    | /api/contratantes/{id}                     | Atualizar perfil do contratante
-GET    | /api/contratantes/{id}/eventos             | Listar eventos do contratante
-POST   | /api/contratantes/evento                   | Criar evento
-POST   | /api/contratantes/notificar-artista        | Notificar artista sobre um evento
+### Contratantes
 
-Eventos
+| Método | Endpoint | Descrição |
+|---|---|---|
+| `POST` | `/api/contratantes` | Cadastrar contratante |
+| `GET` | `/api/contratantes/{id}` | Buscar contratante por ID |
+| `PUT` | `/api/contratantes/{id}` | Atualizar perfil |
+| `GET` | `/api/contratantes/{id}/eventos` | Listar eventos |
+| `POST` | `/api/contratantes/evento` | Criar evento |
+| `POST` | `/api/contratantes/notificar-artista` | Notificar artista sobre evento |
 
-Método | Endpoint              | Descrição
--------|------------------------|---------------------------------------------
-DELETE | /api/eventos/{id}      | Cancelar evento
+### Eventos
 
-🎯 Sistema de Match
+| Método | Endpoint | Descrição |
+|---|---|---|
+| `DELETE` | `/api/eventos/{id}` | Cancelar evento |
 
-O endpoint /api/artistas/buscar realiza o casamento entre eventos e artistas com base em:
+---
 
-- Formato do show desejado
-- Distância (cálculo via fórmula de Haversine), respeitando o raio de busca do evento
-- Disponibilidade de agenda na data e horário do evento
-- Cache máximo por hora (opcional)
-- Necessidade de equipamento próprio (opcional)
+## 🎯 Sistema de Match
 
-Os resultados são ordenados por distância (do mais próximo ao mais distante).
+O endpoint `/api/artistas/buscar` realiza o match entre eventos e artistas com base em:
 
-🐰 Mensageria — RabbitMQ
+- **Formato do show** desejado pelo contratante
+- **Distância** via fórmula de Haversine, respeitando o raio do evento
+- **Disponibilidade de agenda** na data e horário do evento
+- **Equipamento próprio** (opcional)
+- **Cache máximo por hora** (opcional)
 
-O RabbitMqConsumer escuta a fila de notificações e envia e-mails via SMTP (MailKit) quando um contratante notifica um artista sobre um evento compatível.
+Os resultados são ordenados do **mais próximo ao mais distante**.
 
-Acesse o painel de gerenciamento:
+---
 
-http://localhost:15672
-Usuário: guest
-Senha: guest
+## 🐰 Mensageria — RabbitMQ
 
-🧪 Testes
+O `RabbitMqConsumerService` escuta a fila de notificações e envia e-mails via SMTP (MailKit) quando um contratante notifica um artista sobre um evento compatível.
 
-Rodar todos os testes
+Painel de gerenciamento: [http://localhost:15672](http://localhost:15672) — `guest / guest`
 
-dotnet test MusicMatch.Tests
+---
 
-🏗️ Padrões e Princípios Utilizados
+## 🧪 Testes
 
-Clean Architecture — Separação clara de responsabilidades
-CQRS — Commands e Queries separados via MediatR
-SOLID — Princípios aplicados em todas as camadas
-Repository Pattern — Abstração do acesso a dados
-DTO Pattern — Objetos de transferência entre camadas
+```bash
+# Rodar todos os testes
+dotnet test
 
-👨‍💻 Autor
+# Apenas unitários
+dotnet test tests/MusicMatch.Tests.Unit
 
-Projeto desenvolvido para fins de estudo e evolução em arquitetura backend com .NET, mensageria, autenticação OAuth e frontend moderno com React.
+# Apenas integração
+dotnet test tests/MusicMatch.Tests.Integration
+```
 
-✅ Status
+### Cobertura atual
 
-Funcionalidade                          | Status
-------------------------------------------|--------
-Clean Architecture                        | ✔️
-CQRS com MediatR                          | ✔️
-FluentValidation                          | ✔️
-PostgreSQL + EF Core                      | ✔️
-RabbitMQ + notificações por e-mail        | ✔️
-Autenticação Google OAuth + JWT           | ✔️
-Sistema de Match (Haversine + filtros)    | ✔️
-Frontend React + TypeScript + Tailwind    | ✔️
-Cadastro e edição de perfil               | ✔️
-Cancelamento de eventos e agendas         | ✔️
-Docker Compose (infraestrutura)           | ✔️
-Testes unitários                          | 🔲 Em expansão
+| Tipo | Quantidade | Status |
+|---|---|---|
+| Unitários | 4 | ✅ Passando |
+| Integração | 2 | ✅ Passando |
+| CI (GitHub Actions) | — | ✅ Automático a cada push |
+
+---
+
+## 🏗️ Padrões e Princípios
+
+| Padrão | Aplicação |
+|---|---|
+| Clean Architecture | Separação clara de responsabilidades por camada |
+| CQRS | Commands e Queries separados via MediatR |
+| Repository Pattern | Abstração do acesso a dados |
+| DTO Pattern | Objetos de transferência entre camadas |
+| SOLID | Aplicado em todas as camadas |
+
+---
+
+## ✅ Status do Projeto
+
+| Funcionalidade | Status |
+|---|---|
+| Clean Architecture | ✅ |
+| CQRS com MediatR | ✅ |
+| FluentValidation | ✅ |
+| PostgreSQL + EF Core | ✅ |
+| RabbitMQ + notificações por e-mail | ✅ |
+| Autenticação Google OAuth + JWT | ✅ |
+| Sistema de Match (Haversine + filtros) | ✅ |
+| Frontend React + TypeScript + Tailwind | ✅ |
+| Cadastro e edição de perfil | ✅ |
+| Cancelamento de eventos e agendas | ✅ |
+| Docker Compose (infraestrutura) | ✅ |
+| Testes unitários e de integração | ✅ |
+| CI/CD com GitHub Actions | ✅ |
+
+---
+
+## 👨‍💻 Autor
+
+Projeto de estudo e evolução em arquitetura backend com .NET, mensageria, autenticação OAuth e frontend moderno com React.
